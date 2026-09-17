@@ -26,7 +26,6 @@ The published dataset is available at:
 ## Repository Structure
 
 ```
-├── 0_0_miniconda.sh
 ├── 0_1_download.ipynb              # Step 1  — NASADEM download
 ├── 0_2_build_vrt.sbatch            # Step 2  — VRT mosaic construction
 ├── 0_3_dem_domain.sbatch           # Step 3  — Domain warp and tiling
@@ -48,14 +47,6 @@ The published dataset is available at:
 ---
 
 ## Pipeline Overview
-### Step 0 — Environment Setup (`0_0_miniconda.sh`)
-Installs the Miniconda3 Python environment required for the download
-notebook and GDAL-based preprocessing steps. Run once on the cluster
-login node before starting the pipeline:
-
-```bash
-bash 0_0_miniconda.sh
-```
 ### Step 1 — NASADEM Download (`0_1_download.ipynb`)
 Queries the NASA Common Metadata Repository (CMR) API for NASADEM HGT v001 granules within the CONUS bounding box (−125°W to −66°W, 25°N to 50°N). Downloads 1,250 individual 1°×1° HGT zip files via authenticated curl requests using NASA Earthdata credentials.
 
