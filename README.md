@@ -6,7 +6,6 @@
 Code repository for the manuscript:
 
 > **Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction**  
-> *Scientific Data* (Nature Portfolio) — under review
 
 ---
 
@@ -14,7 +13,7 @@ Code repository for the manuscript:
 
 The published dataset is available at:
 
-- **Repository:** [MOspace, University of Missouri — DOI: TBD]
+- **Repository:** [Harvard Dataverse, DOI:10.7910/DVN/ZKSKKX]
 - **Components:** Global horizontal irradiance (`glob_rad`), direct beam irradiance (`beam_rad`), diffuse irradiance (`diff_rad`)
 - **Coverage:** Conterminous United States (CONUS)
 - **Resolution:** 30 m, EPSG:5070 (NAD83 Albers Equal Area Conic)
