@@ -125,6 +125,7 @@ Expected wall time: 48 hours per tile.
 ### Validation (`validation/`)
 
 - `preprocessing.ipynb` — Downloads and preprocesses 1-minute SURFRAD observations (2015–2024) for 7 CONUS stations. Applies QC filtering, clear-sky detection (DHI/GHI < 0.30), beam horizontal derivation, daily integration, and multi-year mean computation. Outputs `surfrad_multiyear_means.csv`.
+- `SURFRAD stations used (7)` - Bondville IL, Fort Peck MT, Goodwin Creek MS, Table Mountain CO, Desert Rock NV, Penn State PA, Sioux Falls SD
 - `surfrad_analysis.ipynb` — Joins SURFRAD multi-year means with r.sun pixel values extracted at station locations. Computes validation statistics (R², RMSE, MBE, rMBE), signal decomposition (seasonal R² = 0.955, spatial R²), and generates all validation figures and tables for the manuscript.
 
 ---
@@ -167,11 +168,22 @@ Separate workflow for named forest site analyses (Monongahela, Mark Twain, Wayne
 
 ---
 
+## Quickstart — Reproducing the Dataset
+
+1. Configure NASA Earthdata credentials (see Step 1)
+2. Run Steps 1–6 sequentially on the cluster
+3. Submit Step 7 array: `sbatch --array=1-461%20 0_7_conus_rhor_sun_v2.sbatch`
+4. After completion, compute annual means: `sbatch 2_annual_mean.sbatch`
+
+## Acknowledgements
+SURFRAD data used for validation provided by NOAA GML.
+Augustine et al. (2000); Augustine et al. (2005).
+
 ## Data Citation
 
 If you use the dataset, please cite:
 
-> [Author names] ([Year]). Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction. *Scientific Data*. DOI: TBD
+> Ganjam, M., Dickinson, M., Rau, B., & Stambaugh, M. (2026). Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction [Data set]. Harvard Dataverse, V1. https://doi.org/10.7910/DVN/ZKSKKX
 
 And the code repository:
 
@@ -188,6 +200,6 @@ Dataset: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://cr
 
 ## Contact
 
-Manu (mgvhy) — Stambaugh Lab, School of Natural Resources, University of Missouri  
-For dataset questions: [email TBD]  
+Manaswini Ganjam — Post-doctoral Fellow, Centre for Tree-Ring Science, University of Missouri  
+For dataset questions: mgvhy@umsystem.edu  
 For code issues: please open a GitHub issue.
