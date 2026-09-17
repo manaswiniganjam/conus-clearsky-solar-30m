@@ -74,17 +74,17 @@ Partitions the domain into a regular grid of 640 tiles (5,000 × 5,000 px interi
 
 ---
 
-### Step 4 — DEM Tile Export (`0_4_dem_tiles.sbatch` + `0_5_submit_dem_tiles.sh`)
+### Step 4 + Step 5 — DEM Tile Export (`0_4_dem_tiles.sbatch` + `0_5_submit_dem_tiles.sh`)
 Exports individual overlap DEM tile GeoTIFFs from the warped VRT using SLURM array jobs. Each tile includes the 1,000-pixel overlap buffer for horizon computation. `0_5_submit_dem_tiles.sh` configures the SLURM array submission.
 
 ---
 
-### Step 5 — Tile Index (`0_6_merge_tile_index.sbatch`)
+### Step 6 — Tile Index (`0_6_merge_tile_index.sbatch`)
 Merges per-tile metadata TSV outputs into a master tile index used for downstream job coordination.
 
 ---
 
-### Step 6 — Solar Radiation Computation (`0_7_conus_rhor_sun.sbatch`)
+### Step 7 — Solar Radiation Computation (`0_7_conus_rhor_sun.sbatch`)
 ```bash
 sbatch --array=1-462%20 0_7_conus_rhor_sun_v3.sbatch
 ```
