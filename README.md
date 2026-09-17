@@ -19,7 +19,7 @@ The published dataset is available at:
 - **Resolution:** 30 m, EPSG:5070 (NAD83 Albers Equal Area Conic)
 - **Temporal:** 12 representative days (DOY 15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349) + annual means
 - **Format:** GeoTIFF, Float32, DEFLATE compressed, tiled
-- **Size:** ~950 GB (462 tiles × 12 DOYs × 3 components + 3 annual mean layers)
+- **Size:** ~950 GB (422 tiles × 12 DOYs × 3 components + 3 annual mean layers)
 
 ---
 
