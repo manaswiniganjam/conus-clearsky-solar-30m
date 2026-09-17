@@ -26,7 +26,7 @@ The published dataset is available at:
 ## Repository Structure
 
 ```
-├── 0_0_
+├── 0_0_miniconda.sh
 ├── 0_1_download.ipynb              # Step 1  — NASADEM download
 ├── 0_2_build_vrt.sbatch            # Step 2  — VRT mosaic construction
 ├── 0_3_dem_domain.sbatch           # Step 3  — Domain warp and tiling
