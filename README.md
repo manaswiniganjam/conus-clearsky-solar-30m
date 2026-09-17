@@ -142,9 +142,10 @@ Separate workflow for named forest site analyses (Monongahela, Mark Twain, Wayne
 | Job scheduler | SLURM |
 | Container runtime | Apptainer (formerly Singularity) |
 | Container | GRASS GIS 8.4 + GDAL + Python 3 |
-| Tiles processed | 462 non-void tiles |
+| Tiles processed | 422 non-void tiles |
 | Concurrent jobs | 20 (configurable via `%N` in `--array`) |
-| Wall time per tile | 2–4 hours (terrain complexity dependent) |
+| Wall time per tile | 48 hours (terrain complexity dependent) |
+| Typical runtime per tile | 2–4 hours (terrain complexity dependent) |
 | Scratch storage per tile | ~5 GB (auto-cleaned after job) |
 | Total output size | ~950 GB |
 
