@@ -1,2 +1,189 @@
-# conus-clearsky-solar-30m
-This repository contains the full processing pipeline for a 30-meter resolution, clear-sky solar radiation dataset covering the conterminous United States (CONUS). It includes DEM preprocessing, terrain-horizon correction and solar radiation modeling (GRASS GIS r.horizon / r.sun), validation against NOAA SURFRAD ground stations.
+# CONUS 30m Clear-Sky Solar Radiation Dataset — Processing Pipeline
+
+[![DOI](https://zenodo.org/badge/DOI/ZENODO_DOI_PLACEHOLDER.svg)](https://doi.org/ZENODO_DOI_PLACEHOLDER)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Code repository for the manuscript:
+
+> **Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction**  
+> *Scientific Data* (Nature Portfolio) — under review
+
+---
+
+## Dataset
+
+The published dataset is available at:
+
+- **Repository:** [MOspace, University of Missouri — DOI: TBD]
+- **Components:** Global horizontal irradiance (`glob_rad`), direct beam irradiance (`beam_rad`), diffuse irradiance (`diff_rad`)
+- **Coverage:** Conterminous United States (CONUS)
+- **Resolution:** 30 m, EPSG:5070 (NAD83 Albers Equal Area Conic)
+- **Temporal:** 12 representative days (DOY 15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349) + annual means
+- **Format:** GeoTIFF, Float32, DEFLATE compressed, tiled
+- **Size:** ~950 GB (462 tiles × 12 DOYs × 3 components + 3 annual mean layers)
+
+---
+
+## Repository Structure
+
+```
+├── 0_1_download.ipynb              # Step 1  — NASADEM download
+├── 0_2_build_vrt.sbatch            # Step 2  — VRT mosaic construction
+├── 0_3_dem_domain.sbatch           # Step 3  — Domain warp and tiling
+├── 0_4_dem_tiles.sbatch            # Step 4  — Export individual DEM tiles
+├── 0_5_submit_dem_tiles.sh         # Step 4b — SLURM array submission for tiles
+├── 0_6_merge_tile_index.sbatch     # Step 5  — Merge tile metadata index
+├── 0_7_conus_rhor_sun.sbatch       # Step 6  — r.sun + r.horizon (main compute)
+├── 0_81_test_empty_tiles.sbatch    # Step 7a — Void tile detection
+├── 0_82_summarize_void.py          # Step 7b — Void tile classification summary
+├── 0_86_make_tiles_run.sh          # Step 7c — Generate valid tile run list
+├── validation/
+│   ├── preprocessing.ipynb         # SURFRAD data download and preprocessing
+│   └── surfrad_analysis.ipynb      # Validation analysis and figure generation
+└── site_analysis/
+    ├── solar_mtnf_tiled.sbatch     # Site-specific r.sun (named forest sites)
+    ├── mtnf_annual12.sbatch        # Annual mean for site-specific outputs
+    ├── run_solar_site_tiled_final.sh  # Submission script for site analysis
+    └── run_solar_annual12.sh       # Submission script for annual means
+```
+
+---
+
+## Pipeline Overview
+
+### Step 1 — NASADEM Download (`0_1_download.ipynb`)
+Queries the NASA Common Metadata Repository (CMR) API for NASADEM HGT v001 granules within the CONUS bounding box (−125°W to −66°W, 25°N to 50°N). Downloads 1,250 individual 1°×1° HGT zip files via authenticated curl requests using NASA Earthdata credentials.
+
+**Requires:** NASA Earthdata account with `.netrc` credentials configured.
+
+---
+
+### Step 2 — VRT Mosaic (`0_2_build_vrt.sbatch`)
+Builds a GDAL virtual raster (VRT) mosaic from all downloaded HGT tiles using `gdalbuildvrt`. The VRT serves as the authoritative source raster for all subsequent preprocessing.
+
+---
+
+### Step 3 — Domain Warp and Tiling (`0_3_dem_domain.sbatch`)
+Reprojects and resamples the VRT mosaic to:
+- **CRS:** EPSG:5070 (NAD83 Albers Equal Area Conic)
+- **Resolution:** 30 m
+- **Resampling:** Cubic
+- **Extent:** CONUS + 30 km buffer
+
+Partitions the domain into a regular grid of 640 tiles (5,000 × 5,000 px interior, 30 km / 1,000 px overlap buffer). Generates tile index CSV with pixel coordinates for each tile.
+
+---
+
+### Step 4 — DEM Tile Export (`0_4_dem_tiles.sbatch` + `0_5_submit_dem_tiles.sh`)
+Exports individual overlap DEM tile GeoTIFFs from the warped VRT using SLURM array jobs. Each tile includes the 1,000-pixel overlap buffer for horizon computation. `0_5_submit_dem_tiles.sh` configures the SLURM array submission.
+
+---
+
+### Step 5 — Tile Index (`0_6_merge_tile_index.sbatch`)
+Merges per-tile metadata TSV outputs into a master tile index used for downstream job coordination.
+
+---
+
+### Step 6 — Solar Radiation Computation (`0_7_conus_rhor_sun.sbatch`)
+**Primary compute step.** Runs inside a GRASS GIS 8.4 Apptainer container per tile:
+
+1. Exports DEM cutout to local scratch
+2. Fills ocean/void border pixels within 21 km belt with elevation = 0 m
+3. Computes slope and aspect (`r.slope.aspect`)
+4. Computes terrain horizon angles at 36 azimuths, 10° step, 20 km max distance (`r.horizon`)
+5. Runs `r.sun` in clear-sky mode for 12 representative DOYs
+6. Exports three radiation components per DOY as GeoTIFF:
+   - `glob_rad` — global horizontal irradiance (Wh m⁻² day⁻¹)
+   - `beam_rad` — direct beam irradiance (Wh m⁻² day⁻¹)
+   - `diff_rad` — diffuse irradiance (Wh m⁻² day⁻¹)
+
+**Key parameters:**
+| Parameter | Value |
+|---|---|
+| Horizon directions | 36 (0°–350°, 10° step) |
+| Horizon max distance | 20,000 m |
+| Ocean/void fill belt | 21,000 m |
+| Linke turbidity | 3.0 (r.sun default) |
+| Ground albedo | 0.2 (r.sun default) |
+| Void threshold | valid pixel fraction ≥ 0.001 |
+| Output format | Float32 GeoTIFF, DEFLATE, tiled |
+| NoData value | −32,768 |
+
+---
+
+### Step 7 — Void Classification (`0_81_test_empty_tiles.sbatch`, `0_82_summarize_void.py`, `0_86_make_tiles_run.sh`)
+
+- `0_81_test_empty_tiles.sbatch` — Samples 1,024 pixels per tile to estimate valid land pixel fraction; classifies each tile as VOID or NONVOID
+- `0_82_summarize_void.py` — Aggregates per-tile classification logs into `tiles_VOID.txt` and `tiles_NONVOID.txt`
+- `0_86_make_tiles_run.sh` — Generates the final tile run list excluding void tiles and previously completed tiles
+
+---
+
+### Validation (`validation/`)
+
+- `preprocessing.ipynb` — Downloads and preprocesses 1-minute SURFRAD observations (2015–2024) for 7 CONUS stations. Applies QC filtering, clear-sky detection (DHI/GHI < 0.30), beam horizontal derivation, daily integration, and multi-year mean computation. Outputs `surfrad_multiyear_means.csv`.
+- `surfrad_analysis.ipynb` — Joins SURFRAD multi-year means with r.sun pixel values extracted at station locations. Computes validation statistics (R², RMSE, MBE, rMBE), signal decomposition (seasonal R² = 0.955, spatial R²), and generates all validation figures and tables for the manuscript.
+
+---
+
+### Site Analysis (`site_analysis/`)
+Separate workflow for named forest site analyses (Monongahela, Mark Twain, Wayne, Hoosier, Shawnee National Forests) using smaller site-specific DEMs. Produces terrain-corrected solar radiation and topographic shading ratios (terrain/flat) for individual forest units. These are independent of the CONUS product and used for site-level comparison studies.
+
+---
+
+## Computational Requirements
+
+| Resource | Specification |
+|---|---|
+| HPC cluster | Hellbender, University of Missouri |
+| Job scheduler | SLURM |
+| Container runtime | Apptainer (formerly Singularity) |
+| Container | GRASS GIS 8.4 + GDAL + Python 3 |
+| Tiles processed | 462 non-void tiles |
+| Concurrent jobs | 20 (configurable via `%N` in `--array`) |
+| Wall time per tile | 2–4 hours (terrain complexity dependent) |
+| Scratch storage per tile | ~5 GB (auto-cleaned after job) |
+| Total output size | ~950 GB |
+
+---
+
+## Dependencies
+
+| Tool | Version | Purpose |
+|---|---|---|
+| GRASS GIS | 8.4 | `r.sun`, `r.horizon`, `r.slope.aspect` |
+| GDAL | ≥ 3.4 | VRT, warp, translate, gdallocationinfo |
+| Apptainer | ≥ 1.0 | Container runtime |
+| Python | ≥ 3.9 | Tile index generation, void classification |
+| pandas | ≥ 1.5 | SURFRAD preprocessing |
+| numpy | ≥ 1.23 | Validation statistics |
+| matplotlib | ≥ 3.6 | Figures |
+| scipy | ≥ 1.9 | Regression statistics |
+| SLURM | any | Job scheduling |
+
+---
+
+## Data Citation
+
+If you use the dataset, please cite:
+
+> [Author names] ([Year]). Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction. *Scientific Data*. DOI: TBD
+
+And the code repository:
+
+> [Author names] ([Year]). CONUS 30m Clear-Sky Solar Radiation — Processing Pipeline. Zenodo. DOI: TBD
+
+---
+
+## License
+
+Code: [MIT License](LICENSE)  
+Dataset: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+
+---
+
+## Contact
+
+Manu (mgvhy) — Stambaugh Lab, School of Natural Resources, University of Missouri  
+For dataset questions: [email TBD]  
+For code issues: please open a GitHub issue.
