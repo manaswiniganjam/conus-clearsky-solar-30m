@@ -34,9 +34,7 @@ The published dataset is available at:
 ├── 0_5_submit_dem_tiles.sh         # Step 5 — SLURM array submission for tiles
 ├── 0_6_merge_tile_index.sbatch     # Step 6  — Merge tile metadata index
 ├── 0_7_conus_rhor_sun_v3.sbatch    # Step 7  — r.sun + r.horizon (main compute)
-├── 2_annual_mean.sbatch            # Step 8  — Void tile detection
-├── 0_82_summarize_void.py          # Step 7b — Void tile classification summary
-├── 0_86_make_tiles_run.sh          # Step 7c — Generate valid tile run list
+├── 2_annual_mean.sbatch            # Step 8  — annual mean post-processing
 ├── validation/
 │   ├── preprocessing.ipynb         # SURFRAD data download and preprocessing
 │   └── surfrad_analysis.ipynb      # Validation analysis and figure generation
@@ -50,7 +48,14 @@ The published dataset is available at:
 ---
 
 ## Pipeline Overview
+### Step 0 — Environment Setup (`0_0_miniconda.sh`)
+Installs the Miniconda3 Python environment required for the download
+notebook and GDAL-based preprocessing steps. Run once on the cluster
+login node before starting the pipeline:
 
+```bash
+bash 0_0_miniconda.sh
+```
 ### Step 1 — NASADEM Download (`0_1_download.ipynb`)
 Queries the NASA Common Metadata Repository (CMR) API for NASADEM HGT v001 granules within the CONUS bounding box (−125°W to −66°W, 25°N to 50°N). Downloads 1,250 individual 1°×1° HGT zip files via authenticated curl requests using NASA Earthdata credentials.
 
@@ -84,12 +89,12 @@ Merges per-tile metadata TSV outputs into a master tile index used for downstrea
 
 ---
 
-### Step 7 — Solar Radiation Computation (`0_7_conus_rhor_sun.sbatch`)
+### Step 7 — Solar Radiation Computation (`0_7_conus_rhor_sun_v3.sbatch`)
 ```bash
 sbatch --array=1-462%20 0_7_conus_rhor_sun_v3.sbatch
 ```
 Processes 422 non-void tiles, 20 concurrent jobs.
-Expected wall time: 5 hours per tile.
+Expected wall time: 48 hours per tile.
 
 **Primary compute step.** Runs inside a GRASS GIS 8.4 Apptainer container per tile:
 
@@ -114,14 +119,6 @@ Expected wall time: 5 hours per tile.
 | Void threshold | valid pixel fraction ≥ 0.001 |
 | Output format | Float32 GeoTIFF, DEFLATE, tiled |
 | NoData value | −32,768 |
-
----
-
-### Step 7 — Void Classification (`0_81_test_empty_tiles.sbatch`, `0_82_summarize_void.py`, `0_86_make_tiles_run.sh`)
-
-- `0_81_test_empty_tiles.sbatch` — Samples 1,024 pixels per tile to estimate valid land pixel fraction; classifies each tile as VOID or NONVOID
-- `0_82_summarize_void.py` — Aggregates per-tile classification logs into `tiles_VOID.txt` and `tiles_NONVOID.txt`
-- `0_86_make_tiles_run.sh` — Generates the final tile run list excluding void tiles and previously completed tiles
 
 ---
 
