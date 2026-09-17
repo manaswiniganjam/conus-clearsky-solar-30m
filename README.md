@@ -26,14 +26,15 @@ The published dataset is available at:
 ## Repository Structure
 
 ```
+├── 0_0_
 ├── 0_1_download.ipynb              # Step 1  — NASADEM download
 ├── 0_2_build_vrt.sbatch            # Step 2  — VRT mosaic construction
 ├── 0_3_dem_domain.sbatch           # Step 3  — Domain warp and tiling
 ├── 0_4_dem_tiles.sbatch            # Step 4  — Export individual DEM tiles
-├── 0_5_submit_dem_tiles.sh         # Step 4b — SLURM array submission for tiles
-├── 0_6_merge_tile_index.sbatch     # Step 5  — Merge tile metadata index
-├── 0_7_conus_rhor_sun.sbatch       # Step 6  — r.sun + r.horizon (main compute)
-├── 0_81_test_empty_tiles.sbatch    # Step 7a — Void tile detection
+├── 0_5_submit_dem_tiles.sh         # Step 5 — SLURM array submission for tiles
+├── 0_6_merge_tile_index.sbatch     # Step 6  — Merge tile metadata index
+├── 0_7_conus_rhor_sun_v3.sbatch    # Step 7  — r.sun + r.horizon (main compute)
+├── 2_annual_mean.sbatch            # Step 8  — Void tile detection
 ├── 0_82_summarize_void.py          # Step 7b — Void tile classification summary
 ├── 0_86_make_tiles_run.sh          # Step 7c — Generate valid tile run list
 ├── validation/
@@ -84,6 +85,12 @@ Merges per-tile metadata TSV outputs into a master tile index used for downstrea
 ---
 
 ### Step 6 — Solar Radiation Computation (`0_7_conus_rhor_sun.sbatch`)
+```bash
+sbatch --array=1-462%20 0_7_conus_rhor_sun_v3.sbatch
+```
+Processes 422 non-void tiles, 20 concurrent jobs.
+Expected wall time: 5 hours per tile.
+
 **Primary compute step.** Runs inside a GRASS GIS 8.4 Apptainer container per tile:
 
 1. Exports DEM cutout to local scratch
@@ -95,7 +102,7 @@ Merges per-tile metadata TSV outputs into a master tile index used for downstrea
    - `glob_rad` — global horizontal irradiance (Wh m⁻² day⁻¹)
    - `beam_rad` — direct beam irradiance (Wh m⁻² day⁻¹)
    - `diff_rad` — diffuse irradiance (Wh m⁻² day⁻¹)
-
+  
 **Key parameters:**
 | Parameter | Value |
 |---|---|
