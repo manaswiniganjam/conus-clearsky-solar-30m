@@ -124,6 +124,37 @@ Expected wall time: 48 hours per tile.
 ---
 
 ## Computational Requirements
+The computational workflows use Apptainer containers on the Hellbender HPC
+cluster to provide reproducible and compatible software environments. The
+containers should be set up using the specified software versions because
+GRASS GIS, GDAL, Python, and their associated libraries can have version
+dependencies that affect the execution of the workflows.
+
+Different stages of the workflow use different containers according to their
+software requirements:
+
+| Container | Environment | Use |
+|---|---|---|
+| `grass83.sif` | GRASS GIS 8.3 environment + GDAL | Workflows requiring GRASS GIS 8.3 |
+| `grass84.sif` | GRASS GIS 8.4 environment + GDAL | Workflows requiring GRASS GIS 8.4 |
+| `nasadem_py310.sif` | Python 3.10 + GRASS GIS 8.3 + GDAL | NASADEM/tile-processing workflows requiring Python 3.10 and GRASS GIS 8.3 |
+
+The appropriate container must be specified in each SLURM script or workflow.
+`grass83.sif` and `grass84.sif` are not interchangeable when a workflow
+depends on a specific GRASS GIS version.
+
+### Container setup
+
+Apptainer is provided through the Hellbender HPC environment. Containers
+should be generated from their corresponding Apptainer definition (`.def`)
+files using the required base image and pinned software versions. For example:
+
+```bash
+module load apptainer
+
+apptainer build grass83.sif grass83.def
+apptainer build grass84.sif grass84.def
+apptainer build nasadem_py310.sif nasadem_py310.def
 
 | Resource | Specification |
 |---|---|
