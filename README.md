@@ -156,6 +156,14 @@ apptainer build grass83.sif grass83.def
 apptainer build grass84.sif grass84.def
 apptainer build nasadem_py310.sif nasadem_py310.def
 
+apptainer exec grass83.sif grass --version
+apptainer exec grass84.sif grass --version
+apptainer exec nasadem_py310.sif grass --version
+apptainer exec nasadem_py310.sif python3 --version
+
+```
+------
+
 | Resource | Specification |
 |---|---|
 | HPC cluster | Hellbender, University of Missouri |
