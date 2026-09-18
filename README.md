@@ -227,7 +227,7 @@ And the code repository:
 ## License
 
 Code: [MIT License](LICENSE)  
-Dataset: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+Dataset: [Creative Commons Zero v1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ---
 
