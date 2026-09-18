@@ -1,6 +1,6 @@
 # CONUS 30m Clear-Sky Solar Radiation Dataset — Processing Pipeline
 
-[![DOI](https://zenodo.org/badge/DOI/ZENODO_DOI_PLACEHOLDER.svg)](https://doi.org/10.5281/zenodo.22822717)
+[![DOI](https://zenodo.org/badge/DOI/ZENODO_DOI_PLACEHOLDER.svg)](https://doi.org/10.5281/zenodo.22822716)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Code repository for the manuscript:
