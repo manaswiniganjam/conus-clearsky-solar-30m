@@ -35,13 +35,11 @@ The published dataset is available at:
 ├── 0_7_conus_rhor_sun_v3.sbatch    # Step 7  — r.sun + r.horizon (main compute)
 ├── 2_annual_mean.sbatch            # Step 8  — annual mean post-processing
 ├── validation/
-│   ├── preprocessing.ipynb         # SURFRAD data download and preprocessing
-│   └── surfrad_analysis.ipynb      # Validation analysis and figure generation
-└── site_analysis/
-    ├── solar_mtnf_tiled.sbatch     # Site-specific r.sun (named forest sites)
-    ├── mtnf_annual12.sbatch        # Annual mean for site-specific outputs
-    ├── run_solar_site_tiled_final.sh  # Submission script for site analysis
-    └── run_solar_annual12.sh       # Submission script for annual means
+   ├── download_surfrad.txt         # SURFRAD data download command to use in windows powershell
+   ├── preprocessing.ipynb          # SURFRAD data preprocessing, filtering
+   ├── add_coordinates.ipynb        # adding precise coordinates for each site
+   ├── threshold_sensitivity.ipynb  # threshold sensitivity analysis and validation tables
+   └── figure 1.ipynb               # Validation analysis and figure generation
 ```
 
 ---
@@ -115,6 +113,7 @@ Expected wall time: 48 hours per tile.
 
 ### Validation (`validation/`)
 
+- `download_surfrad.txt` — Windows PowerShell script for downloading the required 1-minute SURFRAD `.dat` files from the NOAA SURFRAD archive. Downloads data for the seven CONUS stations (Bondville IL, Fort Peck MT, Goodwin Creek MS, Table Mountain CO, Desert Rock NV, Penn State PA, and Sioux Falls SD) for 2015–2024 at the 12 selected days of year (DOYs: 015, 045, 074, 105, 135, 166, 196, 227, 258, 288, 319, and 349). The files are organized locally by station and year under `C:\Users\<username>\surfrad_data\`. No additional software or PowerShell modules are required. Run the script in Windows PowerShell before executing `preprocessing.ipynb`.
 - `preprocessing.ipynb` — Reads local 1-minute SURFRAD .dat files (2015–2024) for 7 CONUS stations. Applies QC filtering, clear-sky detection (DHI/GHI < threshold), beam horizontal derivation, daily integration, and multi-year mean computation. Run at five threshold values (0.20–0.40) to support the sensitivity analysis below. Outputs surfrad_daily_clearsky.csv, surfrad_multiyear_means.csv, surfrad_data_availability.csv per threshold.
 - `SURFRAD stations used (7)` - Bondville IL, Fort Peck MT, Goodwin Creek MS, Table Mountain CO, Desert Rock NV, Penn State PA, Sioux Falls SD
 - `add_coordinates.ipynb` — Replaces approximate station coordinates in the SURFRAD outputs with precise solar tracker instrument coordinates.
