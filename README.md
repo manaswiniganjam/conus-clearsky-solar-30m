@@ -229,6 +229,6 @@ Dataset: [Creative Commons Zero v1.0 Universal (CC0 1.0)](https://creativecommon
 
 ## Contact
 
-Manaswini Ganjam — Post-doctoral Fellow, Centre for Tree-Ring Science, University of Missouri  
+Manaswini Ganjam, Centre for Tree-Ring Science, University of Missouri  
 For dataset questions: mgvhy@umsystem.edu  
 For code issues: please open a GitHub issue.
