@@ -218,6 +218,12 @@ And the code repository:
 
 ---
 
+## References
+
+- Augustine, J. A., DeLuisi, J. J., & Long, C. N. (2000). SURFRAD—A National Surface Radiation Budget Network for Atmospheric Research. Bulletin of the American Meteorological Society, 81(10), 2341–2357. https://doi.org/10.1175/1520-0477(2000)081%3C2341:SANSRB%3E2.3.CO;2
+- Augustine, J. A., Hodges, G. B., Cornwall, C. R., Michalsky, J. J., & Medina, C. I. (2005). An Update on SURFRAD—The GCOS Surface Radiation Budget Network for the Continental United States. Journal of Atmospheric and Oceanic Technology, 22(10), 1460–1472. https://doi.org/10.1175/JTECH1806.1
+
+---
 ## License
 
 Code: [MIT License](LICENSE)  
