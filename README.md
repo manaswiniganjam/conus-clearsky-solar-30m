@@ -3,10 +3,6 @@
 [![DOI](https://zenodo.org/badge/DOI/ZENODO_DOI_PLACEHOLDER.svg)](https://doi.org/10.5281/zenodo.22822716)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Code repository for the manuscript:
-
-> **Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction**  
-
 ---
 
 ## Dataset
