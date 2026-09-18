@@ -26,7 +26,7 @@ VOID_LIST="${VOID_LIST:-$BASE/02_dem_tiles/metadata/tiles_VOID.txt}"
 VRT=$BASE/01_dem_domain/demA_warped_epsg5070_30m_conus30km.vrt
 
 # Tile allowlist: one tile_id per line (e.g., 000002)
-# Default: nonvoid_tiles.txt — all 463 land tiles
+# Default: nonvoid_tiles.txt — all 422 land tiles
 TILELIST="${TILELIST:-$BASE/02_dem_tiles/metadata/tiles_NONVOID.txt}"
 [[ -f "$TILELIST" ]] || { echo "ERROR: missing TILELIST=$TILELIST"; exit 2; }
 
