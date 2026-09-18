@@ -76,7 +76,7 @@ Merges per-tile metadata TSV outputs into a master tile index used for downstrea
 
 ### Step 7 — Solar Radiation Computation (`0_7_conus_rhor_sun_v3.sbatch`)
 ```bash
-sbatch --array=1-462%20 0_7_conus_rhor_sun_v3.sbatch
+sbatch --array=1-422%20 0_7_conus_rhor_sun_v3.sbatch
 ```
 Processes 422 non-void tiles, 20 concurrent jobs.
 Expected wall time: 48 hours per tile.
