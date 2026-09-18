@@ -115,15 +115,13 @@ Expected wall time: 48 hours per tile.
 
 ### Validation (`validation/`)
 
-- `preprocessing.ipynb` — Downloads and preprocesses 1-minute SURFRAD observations (2015–2024) for 7 CONUS stations. Applies QC filtering, clear-sky detection (DHI/GHI < 0.30), beam horizontal derivation, daily integration, and multi-year mean computation. Outputs `surfrad_multiyear_means.csv`.
+- `preprocessing.ipynb` — Reads local 1-minute SURFRAD .dat files (2015–2024) for 7 CONUS stations. Applies QC filtering, clear-sky detection (DHI/GHI < threshold), beam horizontal derivation, daily integration, and multi-year mean computation. Run at five threshold values (0.20–0.40) to support the sensitivity analysis below. Outputs surfrad_daily_clearsky.csv, surfrad_multiyear_means.csv, surfrad_data_availability.csv per threshold.
 - `SURFRAD stations used (7)` - Bondville IL, Fort Peck MT, Goodwin Creek MS, Table Mountain CO, Desert Rock NV, Penn State PA, Sioux Falls SD
-- `surfrad_analysis.ipynb` — Joins SURFRAD multi-year means with r.sun pixel values extracted at station locations. Computes validation statistics (R², RMSE, MBE, rMBE), signal decomposition (seasonal R² = 0.955, spatial R²), and generates all validation figures and tables for the manuscript.
-
----
-
-### Site Analysis (`site_analysis/`)
-Separate workflow for named forest site analyses (Monongahela, Mark Twain, Wayne, Hoosier, Shawnee National Forests) using smaller site-specific DEMs. Produces terrain-corrected solar radiation and topographic shading ratios (terrain/flat) for individual forest units. These are independent of the CONUS product and used for site-level comparison studies.
-
+- `add_coordinates.ipynb` — Replaces approximate station coordinates in the SURFRAD outputs with precise solar tracker instrument coordinates.
+- `extract_station_values.sbatch` — Extracts r.sun modeled radiation values at the 7 SURFRAD station coordinates from the CONUS tile mosaics, via gdaltransform/gdallocationinfo. Outputs rsun_station_values.csv.
+- `threshold_sensitivity.ipynb` — Joins r.sun station values with SURFRAD multi-year means across all five thresholds. Computes validation statistics (R², RMSE, MBE, rMBE) at threshold = 0.30 (manuscript Table 1), performs seasonal/spatial signal decomposition (manuscript Table 3: seasonal R² = 0.955, spatial R² = 0.435), and generates the threshold sensitivity figure justifying the 0.30 selection.
+- `figure 1.ipynb` — Generates the manuscript's Figure 1 (r.sun modeled vs. SURFRAD measured scatter plot, 3 panels).
+  
 ---
 
 ## Computational Requirements
