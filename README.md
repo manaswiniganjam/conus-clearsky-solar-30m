@@ -33,9 +33,10 @@ The published dataset is available at:
 ├── validation/
    ├── download_surfrad.txt         # SURFRAD data download command to use in windows powershell
    ├── preprocessing.ipynb          # SURFRAD data preprocessing, filtering
-   ├── add_coordinates.ipynb        # adding precise coordinates for each site
-   ├── threshold_sensitivity.ipynb  # threshold sensitivity analysis and validation tables
-   └── figure 1.ipynb               # Validation analysis and figure generation
+   ├── add_coordinates.ipynb        # Adding precise coordinates for each site
+   ├── surfrad_validation.ipynb     # Technical Validation, tables and figures
+   ├── threshold_sensitivity.ipynb  # Threshold sensitivity analysis
+   └── signal_decomposition.ipynb   # Signal decomposition analysis
 ```
 
 ---
