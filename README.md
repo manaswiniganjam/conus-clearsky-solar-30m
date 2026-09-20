@@ -126,6 +126,17 @@ Expected wall time: 48 hours per tile.
   
 ---
 
+### Tile Indexing (`tile_indexing/`)
+
+Builds the tile lookup index and interactive map used to identify and select
+tiles by ID, coordinate, or region, from the final tiled products of Steps 7–8.
+
+- `conus_tile_index_gpkg.ipynb` — Builds `conus_tile_index.gpkg` and `conus_tile_index.csv` from the final tiled products.
+- `conus_tile_map.ipynb` — Generates `conus_tile_index.html`, the interactive tile-selection map, from the tile index.
+- `conus_tile_index.gpkg` / `.csv` / `.html` — Outputs, also shipped with the published dataset (See the data citation below for repository details).
+
+---
+
 ## Computational Requirements
 The computational workflows use Apptainer containers on the Hellbender HPC
 cluster to provide reproducible and compatible software environments. The
