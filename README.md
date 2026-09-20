@@ -37,6 +37,12 @@ The published dataset is available at:
    ├── surfrad_validation.ipynb     # Technical Validation, tables and figures
    ├── threshold_sensitivity.ipynb  # Threshold sensitivity analysis
    └── signal_decomposition.ipynb   # Signal decomposition analysis
+ └── tile_indexing/
+   ├── conus_tile_index_gpkg.ipynb  # Builds the tile index (gpkg + csv) from the final tiled products (Steps 7–8)
+   ├── conus_tile_map.ipynb         # Generates the interactive HTML tile-selection map from the tile index
+   ├── conus_tile_index.gpkg        # Full tile polygons, WGS84 — for GIS/Python use
+   ├── conus_tile_index.csv         # Flat tile table (no geometry) — usable without GIS libraries
+   └── conus_tile_index.html        # Interactive map — click, draw a box, or look up tiles by ID/coordinate
 ```
 
 ---
