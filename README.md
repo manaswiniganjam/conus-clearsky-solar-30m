@@ -228,7 +228,7 @@ If you use the dataset, please cite:
 
 And the code repository:
 
-> Ganjam Manaswini (2026). CONUS 30m Clear-Sky Solar Radiation — Processing Pipeline. Zenodo. DOI: [https://doi.org/10.5281/zenodo.22824627]
+> Ganjam Manaswini (2026). CONUS 30m Clear-Sky Solar Radiation — Processing Pipeline. Zenodo concept DOI: [https://doi.org/10.5281/zenodo.22824627]
 
 ---
 
