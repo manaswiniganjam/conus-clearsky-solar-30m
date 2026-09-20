@@ -224,7 +224,7 @@ Augustine et al. (2000); Augustine et al. (2005).
 
 If you use the dataset, please cite:
 
-> Ganjam, M., Dickinson, M., Rau, B., & Stambaugh, M. (2026). Thirty-meter resolution clear-sky solar radiation for the conterminous United States with terrain horizon correction [Data set]. Harvard Dataverse, V1. https://doi.org/10.7910/DVN/ZKSKKX
+> Ganjam, M., Dickinson, M., Rau, B., & Stambaugh, M. (2026). Thirty-Meter Resolution Clear-Sky Solar Radiation for the Conterminous United States with Terrain Horizon Correction [Data set]. Harvard Dataverse, V1. https://doi.org/10.7910/DVN/ZKSKKX
 
 And the code repository:
 
