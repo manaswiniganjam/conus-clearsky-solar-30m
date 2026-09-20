@@ -42,7 +42,7 @@ The published dataset is available at:
    ├── conus_tile_map.ipynb         # Generates the interactive HTML tile-selection map from the tile index
    ├── conus_tile_index.gpkg        # Full tile polygons, WGS84 — for GIS/Python use
    ├── conus_tile_index.csv         # Flat tile table (no geometry) — usable without GIS libraries
-   └── conus_tile_index.html        # Interactive map — click, draw a box, or look up tiles by ID/coordinate
+   └── conus_tile_map.html        # Interactive map — click, draw a box, or look up tiles by ID/coordinate
 ```
 
 ---
@@ -132,7 +132,7 @@ Builds the tile lookup index and interactive map used to identify and select
 tiles by ID, coordinate, or region, from the final tiled products of Steps 7–8.
 
 - `conus_tile_index_gpkg.ipynb` — Builds `conus_tile_index.gpkg` and `conus_tile_index.csv` from the final tiled products.
-- `conus_tile_map.ipynb` — Generates `conus_tile_index.html`, the interactive tile-selection map, from the tile index.
+- `conus_tile_map.ipynb` — Generates `conus_tile_map.html`, the interactive tile-selection map, from the tile index.
 - `conus_tile_index.gpkg` / `.csv` / `.html` — Outputs, also shipped with the published dataset (See the data citation below for repository details).
 
 ---
